@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
-from mytest.views import  hello, my_homepage_view, current_datetime, hour_ahead
+from mytest.views import  hello, my_homepage_view, current_datetime, hour_ahead, book_list
+
 
 
 urlpatterns = patterns('',
@@ -7,5 +8,6 @@ urlpatterns = patterns('',
     ('^$', my_homepage_view),
     ('^time/$', current_datetime),
     (r'^time/plus/(\d{1,2}?)/$', hour_ahead),
+    ('^booklist/$', book_list),
     #...
 )
