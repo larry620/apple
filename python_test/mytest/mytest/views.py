@@ -1,9 +1,10 @@
-#from django.template.loader import get_template
-#from django.template import Template, Context
+from django.template.loader import get_template
+from django.template import Template, Context
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 import datetime
 import MySQLdb
+
 def hello(request):
     return HttpResponse('Hello World Hi')
 
@@ -46,3 +47,28 @@ def book_list(request):
     names = [row[0] for row in cursor.fetchall()]
     db.close()
     return render_to_response('book_list.html', {'names': names})
+
+def current_url_view_bad(request):
+	return HttpResponse("Welcome to the papge at /current/")
+
+def current_url_view_good(request):
+	return HttpResponse("Welcome to the goodpapge at %s" % request.path)
+
+
+def ua_display_bad(request):
+	ua = request.META['HTTP_USER_AGENT']
+	return HttpResponse("your browser is %s" % ua)
+
+def ua_display_good(request):
+	try:
+		ua = request.META['HTTP_USER_AGENT']
+	except KeyError:
+		ua = 'unknown'	
+	return HttpResponse("your browser is %s" % ua)
+
+def display_meta(request)
+	values = request.META.items()	
+	values.sort()
+	mvalues=[for k, v in values]
+
+	return render_to_response('display_meta.html', locals())
