@@ -1,12 +1,4 @@
 
-{% extends "base.html" %}
-{% block title %}display HttpRespones meta{% endblock %}
-
-{% block content %}
-{% endblock %}
-
-
-<!--
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html lang="en">
 <head>
@@ -15,19 +7,16 @@
 
 
 <body>
-	<h1> My Http Respones meta</h1>
+	<h1> hahahah </h1>
+<table id=showmeta>
 
-	<hr>
-	<p>Thanks for visting my site.</p>
-
-
-<ul>
-{% for i in i %}
-   <li> number{{ a }} </li>
+<table>
+{% for k,v in values %}
+	<tr><td> {{ k }} : {{ v }} </tr></td>
+	<td>--------------</td>
 {% endfor %}
-</ul>
+</table>
 
 
 </body>
 </html>
--->

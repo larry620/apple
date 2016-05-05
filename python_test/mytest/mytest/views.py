@@ -66,9 +66,27 @@ def ua_display_good(request):
 		ua = 'unknown'	
 	return HttpResponse("your browser is %s" % ua)
 
-def display_meta(request)
+def display_meta(request):
 	values = request.META.items()	
-	values.sort()
-	mvalues=[for k, v in values]
-
 	return render_to_response('display_meta.html', locals())
+
+def search_form(request):
+	return render_to_response('search_form.html')
+
+def search(request):
+	#if request.GET['q']:
+	#if request.GET['q'] in list1:
+	if q in request.GET:
+	
+	#	print request.GET['q']
+		message = 'you searched for: %s' % request.GET['q']
+	#	return HttpResponse(message)
+    #elif not request.GET['q']:
+	#    message = 'i am false'
+	#elif  request.GET['q'] == ' ':
+	#	return render_to_response('search_form.html')		
+
+	else:
+		message = 'you subbitted an empty form.'
+	return HttpResponse(message)
+
