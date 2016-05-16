@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response
 import datetime
 import MySQLdb
+from books.models import Book
 
 def hello(request):
     return HttpResponse('Hello World Hi')
@@ -73,20 +74,27 @@ def display_meta(request):
 def search_form(request):
 	return render_to_response('search_form.html')
 
+#def search(request):
+#	#if request.GET['q']:
+#	#if request.GET['q'] in list1:
+#	if 'q' in request.GET:
+#	
+#	#	print request.GET['q']
+#		message = 'you searched for: %s' % request.GET['q']
+#	#	return HttpResponse(message)
+#    #elif not request.GET['q']:
+#	#    message = 'i am false'
+#	#elif  request.GET['q'] == ' ':
+#	#	return render_to_response('search_form.html')		
+#
+#	else:
+#		message = 'you subbitted an empty form.'
+#	return HttpResponse(message)
+
 def search(request):
-	#if request.GET['q']:
-	#if request.GET['q'] in list1:
-	if q in request.GET:
-	
-	#	print request.GET['q']
-		message = 'you searched for: %s' % request.GET['q']
-	#	return HttpResponse(message)
-    #elif not request.GET['q']:
-	#    message = 'i am false'
-	#elif  request.GET['q'] == ' ':
-	#	return render_to_response('search_form.html')		
-
+	if 'q' in request.GET and request.GET['q']:
+		q = request.GET['q']
+		books = Book.objects.filter(title__icontains=q)
+		return render_to_response('search_results.html', {'book': books, 'query': q})
 	else:
-		message = 'you subbitted an empty form.'
-	return HttpResponse(message)
-
+		return HttpResponse('please submit a search term.')
