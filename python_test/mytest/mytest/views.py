@@ -96,5 +96,8 @@ def search(request):
 		q = request.GET['q']
 		books = Book.objects.filter(title__icontains=q)
 		return render_to_response('search_results.html', {'book': books, 'query': q})
+#	else:
+#		return HttpResponse('please submit a search term.')
 	else:
-		return HttpResponse('please submit a search term.')
+		return render_to_response('search_form.html', {'error': True})
+
