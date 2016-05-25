@@ -1,6 +1,6 @@
 from django.template.loader import get_template
 from django.template import Template, Context
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 import datetime
 import MySQLdb
@@ -92,12 +92,64 @@ def search_form(request):
 #	return HttpResponse(message)
 
 def search(request):
-	if 'q' in request.GET and request.GET['q']:
+	#if 'q' in request.GET and request.GET['q']:
+	#error = False
+	errors = []
+	if 'q' in request.GET:
 		q = request.GET['q']
-		books = Book.objects.filter(title__icontains=q)
-		return render_to_response('search_results.html', {'book': books, 'query': q})
+		if not q:
+			errors.append('Enter a search term')
+		elif len(q) > 5:
+			errors.append('please enter at most 5 characters.')
+		else:
+			books = Book.objects.filter(title__icontains=q)
+			return render_to_response('search_results.html', {'book': books, 'query': q})
 #	else:
-#		return HttpResponse('please submit a search term.')
-	else:
-		return render_to_response('search_form.html', {'error': True})
+	#	return HttpResponse('please submit a search term.')
+	#else:
+	#	return render_to_response('search_form.html', {'error': True})
+	return render_to_response('search_form.html', {'errors': errors})
+
+def contact(request):
+	errors = []
+	if request.method == 'POST':
+		if not request.POST.get('subject', ''):
+			errors.append('enther a subject')
+		if not request.POST.get('message', ''):
+			errors.append('enther a message')
+		if request.POST.get('email') and '@' not in request.POST['email']:
+			errors.append('enther a valid e-mail address.')
+		if not errors:
+			send_mail(
+				request.POST['subject'],
+				request.POST['message'],
+				request.POST.get('email', 'noreply@example.com'),
+				['siteowner@example.com'],
+					)
+			return HttpResponseRedirect('/contact/thank/')
+	return render_to_response('contact_form.html', {'errors': errors, 'subject': request.POST.get('subject', ''), 'message': request.POST.get('message', ''), 'email': request.POST.get('email', ''),})
+				
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
