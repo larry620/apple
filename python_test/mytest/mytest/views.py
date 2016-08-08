@@ -5,6 +5,8 @@ from django.shortcuts import render_to_response
 import datetime
 import MySQLdb
 from books.models import Book
+from mytest.forms import ContactForm
+from django.core.mail import send_mail
 
 def hello(request):
     return HttpResponse('Hello World Hi')
@@ -110,27 +112,43 @@ def search(request):
 	#	return render_to_response('search_form.html', {'error': True})
 	return render_to_response('search_form.html', {'errors': errors})
 
+#def contact(request):
+#	errors = []
+#	if request.method == 'POST':
+#		if not request.POST.get('subject', ''):
+#			errors.append('enther a subject')
+#		if not request.POST.get('message', ''):
+#			errors.append('enther a message')
+#		if request.POST.get('email') and '@' not in request.POST['email']:
+#			errors.append('enther a valid e-mail address.')
+#		if not errors:
+#			send_mail(
+#				request.POST['subject'],
+#				request.POST['message'],
+#				request.POST.get('email', 'noreply@example.com'),
+#				['siteowner@example.com'],
+#					)
+#			return HttpResponseRedirect('/contact/thank/')
+#	return render_to_response('contact_form.html', {'errors': errors, 'subject': request.POST.get('subject', ''), 'message': request.POST.get('message', ''), 'email': request.POST.get('email', ''),})
+
 def contact(request):
-	errors = []
 	if request.method == 'POST':
-		if not request.POST.get('subject', ''):
-			errors.append('enther a subject')
-		if not request.POST.get('message', ''):
-			errors.append('enther a message')
-		if request.POST.get('email') and '@' not in request.POST['email']:
-			errors.append('enther a valid e-mail address.')
-		if not errors:
+		form = ContactForm(request.POST)
+		if form.is_valid():
+			cd = form.cleaned_data
 			send_mail(
-				request.POST['subject'],
-				request.POST['message'],
-				request.POST.get('email', 'noreply@example.com'),
+				cd['subject'],
+				cd['message'],
+				cd.get('email', 'noreply@example.com'),
 				['siteowner@example.com'],
-					)
-			return HttpResponseRedirect('/contact/thank/')
-	return render_to_response('contact_form.html', {'errors': errors, 'subject': request.POST.get('subject', ''), 'message': request.POST.get('message', ''), 'email': request.POST.get('email', ''),})
-				
+			)
+			return HttpResponseRedirect('/contact/thanks/')
+	else:
+		form = ContactForm( initial={'subject': 'wahahaha'})
+	return render_to_response('contact_form.html', {'form': form})
 
-
+def thanks(request):
+	return render_to_response('thanks.html')
 
 
 
